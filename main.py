@@ -49,6 +49,7 @@ if response.ok:
                 get_links(url)
         print(links)
 
+
 """
 if response.ok:
     with open('test.csv', 'w') as test:
