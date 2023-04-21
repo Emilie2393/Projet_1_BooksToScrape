@@ -1,6 +1,17 @@
 import requests
 from bs4 import BeautifulSoup
 
+
+home_url = "http://books.toscrape.com/index.html"
+
+response = requests.get(home_url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+category_url = soup.find('ul', {'class': 'nav nav-list'}).findAll('a')
+for i in category_url:
+    link = i['href']
+    print(link)
+
 url = "http://books.toscrape.com/catalogue/category/books/fiction_10/index.html"
 
 response = requests.get(url)
@@ -49,9 +60,7 @@ if response.ok:
     else:
         get_links(url)
 
-    """titles = []"""
-
-    with open('test.csv', 'w', encoding="utf-8") as test:
+    """with open('test.csv', 'w', encoding="utf-8") as test:
         test.write('product_page_url, upc, title, price_including_tax, price_excluding_tax, number_available,'
                    'product_description, category, review_rating, image_url\n')
 
@@ -72,5 +81,5 @@ if response.ok:
                 img = soup.find('img')['src']
                 title = soup.find('h1').text
                 test.write(url + '|' + upc + '|' + title + '|' + priceAndTaxes + '|' + pricesNoTaxes + '|' +
-                           availability + '|' + description_bug + '|' + category + '|' + rating + '|' + img + '\n')
+                           availability + '|' + description_bug + '|' + category + '|' + rating + '|' + img + '\n')"""
 
