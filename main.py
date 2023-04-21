@@ -62,6 +62,7 @@ if response.ok:
             if response.ok:
                 title = soup.find('h1').text
                 test.write(title + '\n')
+
     """tds = soup.findAll('td')
             upc = tds[0].text
             priceAndTaxes = tds[2].text
