@@ -1,8 +1,7 @@
 import requests
-import csv
 from bs4 import BeautifulSoup
 
-url = "http://books.toscrape.com/catalogue/category/books/travel_2/index.html"
+url = "http://books.toscrape.com/catalogue/category/books/fiction_10/index.html"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -53,43 +52,25 @@ if response.ok:
     """titles = []"""
 
     with open('test.csv', 'w', encoding="utf-8") as test:
-        test.write('title\n')
+        test.write('product_page_url, upc, title, price_including_tax, price_excluding_tax, number_available,'
+                   'product_description, category, review_rating, image_url\n')
 
         for j in links:
             url = j
             response = requests.get(url)
             soup = BeautifulSoup(response.text, 'html.parser')
             if response.ok:
+                tds = soup.findAll('td')
+                upc = tds[0].text
+                priceAndTaxes = tds[2].text
+                pricesNoTaxes = tds[3].text
+                availability = tds[5].text
+                description = soup.find('div', {'id': 'product_description'}).find_next('p').text
+                description_bug = description.replace(';', ',')
+                category = soup.findAll('a')[3].text
+                rating = soup.findAll('p')[2]['class'][1]
+                img = soup.find('img')['src']
                 title = soup.find('h1').text
-                test.write(title + '\n')
+                test.write(url + '|' + upc + '|' + title + '|' + priceAndTaxes + '|' + pricesNoTaxes + '|' +
+                           availability + '|' + description_bug + '|' + category + '|' + rating + '|' + img + '\n')
 
-    """tds = soup.findAll('td')
-            upc = tds[0].text
-            priceAndTaxes = tds[2].text
-            pricesNoTaxes = tds[3].text
-            availability = tds[5].text
-            description = soup.find('div', {'id': 'product_description'}).find_next('p').text
-            category = soup.findAll('a')[3].text
-            rating = soup.findAll('p')[2]['class'][1]
-            img = soup.find('img')['src']"""
-
-"""
-
-
-    if response.ok:
-    with open('test.csv', 'w') as test:
-        test.write('product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, '
-                   'number_available, product_description, category, review_rating, image_url\n')
-        soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.find('h1').text
-        tds = soup.findAll('td')
-        upc = tds[0].text
-        priceAndTaxes = tds[2].text
-        pricesNoTaxes = tds[3].text
-        availability = tds[5].text
-        description = soup.find('div', {'id': 'product_description'}).find_next('p').text
-        category = soup.findAll('a')[3].text
-        rating = soup.findAll('p')[2]['class'][1]
-        img = soup.find('img')['src']
-        test.write(url + '|' + upc + '|' + title + '|' + priceAndTaxes + '|' + pricesNoTaxes + '|' +
-                   availability + '|' + description + '|' + category + '|' + rating + '|' + img + '\n')"""
