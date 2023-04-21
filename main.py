@@ -1,5 +1,4 @@
 import requests
-import csv
 from bs4 import BeautifulSoup
 
 url = "http://books.toscrape.com/catalogue/category/books/travel_2/index.html"
