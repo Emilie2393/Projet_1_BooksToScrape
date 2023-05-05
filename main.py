@@ -1,6 +1,9 @@
+import urllib.request
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import os
+import re
 
 home_url = "http://books.toscrape.com/index.html"
 
@@ -30,9 +33,10 @@ for f in category_list:
             next_response = requests.get(next_url)
             next_soup = BeautifulSoup(next_response.text, 'html.parser')
             section = next_soup.findAll('div', {'class': 'image_container'})
-            for i in section:
-                for p in i.find_all('a'):
-                    link_href = p['href']
+            for books in section:
+                """ get all links in each div """
+                for a in books.find_all('a'):
+                    link_href = a['href']
                     link = link_href.replace("../../..", "http://books.toscrape.com/catalogue")
                     links.append(link)
 
@@ -68,63 +72,71 @@ for f in category_list:
         else:
             get_links(url)
 
-        """get category name for csv name"""
+        """get category name for csv file"""
         category_name = soup.find('h1').text
-
-        """with open((category_name + '.csv'), 'w', encoding="utf-8") as data:
-            data.write('product_page_url' + ',' + 'upc' + ',' + 'title' + ',' + 'price_including_tax' + ','
-                       + 'price_excluding_tax' + ',' + 'number_available' + ',' + 'product_description' + ',' +
-                       'category' + ',' + 'review_rating' + ',' + 'image_url' + '\n')"""
 
         products_page_url = []
         upc = []
-        title = []
-        price_including_tax = []
-        price_excluding_tax = []
+        titles = []
+        prices_including_tax = []
+        prices_excluding_tax = []
         number_available = []
-        product_description = []
+        products_description = []
         category = []
-        review_rating = []
-        image_url = []
+        reviews_rating = []
+        images_url = []
 
         for j in links:
             url = j
             products_page_url.append(url)
             response = requests.get(url)
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.content, 'html.parser')
             if response.ok:
                 tds = soup.findAll('td')
                 upc.append(tds[0].text)
-                price_including_tax.append(tds[2].text[2:7])
-                price_excluding_tax.append(tds[3].text[2:7])
+                prices_including_tax.append(tds[2].text)
+                prices_excluding_tax.append(tds[3].text)
                 number_available.append(tds[5].text)
                 description = soup.find('div', {'id': 'product_description'})
                 if description is None:
-                    product_description.append("")
+                    products_description.append("")
                 else:
-                    product_description.append(description.find_next('p').text)
-                    """product_description.append(description.replace(',', ' '))"""
+                    products_description.append(description.find_next('p').text)
                 category.append(category_name)
-                review_rating.append(soup.findAll('p')[2]['class'][1])
-                image_url.append(soup.find('img')['src'])
-                title.append(soup.find('h1').text)
+                reviews_rating.append(soup.findAll('p')[2]['class'][1])
+                images_url.append((soup.find('img')['src']).replace('../..', 'http://books.toscrape.com'))
+                titles.append(soup.find('h1').text)
 
         datas = {
             'products_page_url': products_page_url,
             'upc': upc,
-            'title': title,
-            'price_excluding_tax': price_excluding_tax,
-            'price_including_tax': price_including_tax,
+            'titles': titles,
+            'prices_excluding_tax': prices_excluding_tax,
+            'prices_including_tax': prices_including_tax,
             'number_available': number_available,
-            'product_description': product_description,
+            'products_description': products_description,
             'category': category,
-            'review_rating': review_rating,
-            'image_url': image_url
+            'reviews_rating': reviews_rating,
+            'images_url': images_url
         }
 
-        df = pd.DataFrame(datas)
-    df.to_csv((category_name + '.csv'), index=False, sep=',', encoding='utf-8')
-    df
+        """pandas dataframe and proper encoding"""
+        dataframe = pd.DataFrame(datas)
+        dataframe.to_csv((category_name + '.csv'), index=False, sep=',', encoding='utf-8-sig')
 
-    print(title)
-    print(product_description)
+        """images file creation with os"""
+        os.mkdir(category_name)
+
+        """titles modification"""
+        for title in range(len(titles)):
+            img_title = (re.sub("[':,;!#*!?/.-]", '', titles[title])).replace(" ", "_").replace('"', '')
+            titles[title] = img_title
+
+        """path attribution for each images with urllib.request"""
+        for img in range(len(images_url)):
+            path = "c:/Users/Emilie/Desktop/Formation_INFO/OPENCLASSROOMS/PYTHON/PROJET 2/BOOKSTOSCRAP_RICHARD_EMILIE/" + \
+                   category_name + "/" + titles[img] + ".jpg"
+            urllib.request.urlretrieve(images_url[img], path)
+
+        print(titles)
+
