@@ -8,8 +8,8 @@ import re
 """get html source"""
 
 
-def get_html(url):
-    response = requests.get(url)
+def get_html(from_url):
+    response = requests.get(from_url)
     response.raise_for_status()
     if response.ok:
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -21,22 +21,22 @@ def get_html(url):
 """get one book"""
 
 
-def get_book(soup):
+def get_book(html_soup):
     products_page_url.append(url)
-    tds = soup.findAll('td')
+    tds = html_soup.findAll('td')
     upc.append(tds[0].text)
     prices_including_tax.append(tds[2].text)
     prices_excluding_tax.append(tds[3].text)
     number_available.append(tds[5].text)
-    description = soup.find('div', {'id': 'product_description'})
+    description = html_soup.find('div', {'id': 'product_description'})
     if description is None:
         products_description.append("")
     else:
         products_description.append(description.find_next('p').text)
     category.append(category_name)
-    reviews_rating.append(soup.findAll('p')[2]['class'][1])
-    images_url.append((soup.find('img')['src']).replace('../..', 'http://books.toscrape.com'))
-    titles.append(soup.find('h1').text)
+    reviews_rating.append(html_soup.findAll('p')[2]['class'][1])
+    images_url.append((html_soup.find('img')['src']).replace('../..', 'http://books.toscrape.com'))
+    titles.append(html_soup.find('h1').text)
 
 
 """complete books_list with books of one page"""
@@ -102,7 +102,7 @@ for f in category_list:
     """pages number or None"""
     pages_check = soup.find('li', {'class': 'current'})
 
-    """get book's links"""
+    """get book's links of each pages"""
     if pages_check is not None:
         pages_strip = pages_check.text.strip()
         pages_number = pages_strip[len(pages_strip) - 1]
