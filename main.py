@@ -9,13 +9,13 @@ import re
 
 
 def get_html(from_url):
-    response = requests.get(from_url)
-    response.raise_for_status()
-    if response.ok:
-        soup = BeautifulSoup(response.content, 'html.parser')
+    try:
+        r = requests.get(from_url)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.content, 'html.parser')
         return soup
-    else:
-        print("erreur : ", response.status_code)
+    except requests.exceptions.HTTPError as err:
+        print("HTTP Error", err)
 
 
 """get one book"""
