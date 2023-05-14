@@ -72,8 +72,8 @@ def get_next(pages, next_url):
 """complete category list with each category's url"""
 
 
-def get_category(url):
-    category_url = i['href']
+def get_category(cat_url):
+    category_url = cat_url['href']
     """ correct category's url """
     new_home_url = home_url.replace("/index.html", "")
     full_link = (new_home_url + '/' + category_url)
@@ -158,7 +158,7 @@ for f in category_list:
 
     """titles modification"""
     for title in range(len(titles)):
-        img_title = (re.sub("[':,;!#*!?/.-]", '', titles[title])).replace(" ", "_").replace('"', '')
+        img_title = (re.sub("[':,;!#*?/.-]", '', titles[title])).replace(" ", "_").replace('"', '')
         titles[title] = img_title
 
     """path attribution for each images with urllib.request"""
@@ -166,4 +166,4 @@ for f in category_list:
         path = category_name + "/" + titles[img] + ".jpg"
         urllib.request.urlretrieve(images_url[img], path)
 
-    print(titles)
+
