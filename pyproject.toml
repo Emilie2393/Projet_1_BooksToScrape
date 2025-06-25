@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "P1"
+version = "0.1.0"
+description = ""
+authors = ["Emily2393 <emilie.rich4rd@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+beautifulsoup4 = "^4.12"
+certifi = "^2024.2"
+charset-normalizer = "^3.3"
+idna = "^3.6"
+requests = "^2.31"
+soupsieve = "^2.5"
+urllib3 = "^2.2"
+numpy = "^1.26"
+pandas = "^2.2"
+bs4 = "^0.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
