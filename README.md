@@ -12,7 +12,6 @@ This project perfectly illustrates how an ETL pipeline works. This method is als
   - [2. Install Dependencies with Poetry](#2-install-dependencies)  
   - [3. Run the Program](#3-run-the-program)  
   - [4. Access the Data](#4-access-the-data)  
-- [Output Example](#-output-example)  
 - [Notes](#-notes)  
 
 ---
