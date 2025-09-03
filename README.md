@@ -36,7 +36,10 @@ This project perfectly illustrates how an ETL pipeline works. This method is als
    pip install poetry  
    ```  
 
-### 2. Install dependencies with Poetry
+### 2. Install dependencies with Poetry  
+
+Poetry is a modern Python tool that manages dependencies and virtual environments with ease. By using a single pyproject.toml and a lock file, it ensures consistent setups across machines, making teamwork and collaboration much smoother.  
+
 1. Install all dependecies defined in pyproject.toml:  
    ```powershell  
    poetry install 
