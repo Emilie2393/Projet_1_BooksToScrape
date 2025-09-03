@@ -11,12 +11,8 @@ class Categories:
         self.name = ""
         
 
-
-    """get one category link to add to self.category_list"""
-
-
     def get_category(self, cat_url):
-
+        """get one category link to add to self.category_list"""
         home_url = self.home_url
         category_url = cat_url['href']
         """ correct category's url """
@@ -24,13 +20,10 @@ class Categories:
         full_link = (new_home_url + '/' + category_url)
         self.categories_url_list.append(full_link)
         self.name = get_html(full_link).find('h1').text
-
-    
-    """scrap the main page to add each category to self.category_list"""
     
 
     def get_category_list(self):
-
+        """scrap the main page to add each category to self.category_list"""
         category_urls = self.soup.find('ul', {'class': 'nav nav-list'}).find_all('a')
 
         for i in category_urls:
@@ -41,12 +34,8 @@ class Categories:
         self.categories_url_list.pop(0)
 
 
-    """add each book link to self.category_books"""
-
-
     def get_books_list(self, url):
-        
-        """pages number or None"""
+        """add each book link to self.category_books"""
         book_soup = get_html(url)
         pages_check = book_soup.find('li', {'class': 'current'})
         self.name = book_soup.find('h1').text

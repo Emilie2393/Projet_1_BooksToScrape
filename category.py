@@ -48,7 +48,7 @@ class Category:
         os.makedirs(subfolder, exist_ok=True)
         if os.path.exists(os.path.join(subfolder, f"{self.category[0]}.csv")):
             os.remove(os.path.join(subfolder, f"{self.category[0]}.csv"))
-            print(f"le fichier {self.category[0]} a été suppr")
+            print(f"The file {self.category[0]} has been deleted.")
 
         """pandas dataframe and proper encoding"""
         dataframe = pd.DataFrame(datas)
@@ -64,7 +64,8 @@ class Category:
             urllib.request.urlretrieve(self.images_url[img], path)
     
     def reset_all_lists(self):
+        """delete the previous file if there is one"""
         for attr, value in self.__dict__.items():
             if isinstance(value, list):
                 value.clear()
-    
+

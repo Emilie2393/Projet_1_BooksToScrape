@@ -1,10 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-"""get html source"""
-
 
 def get_html(from_url):
+    """get html source"""
     try:
         r = requests.get(from_url)
         r.raise_for_status()
@@ -14,11 +13,8 @@ def get_html(from_url):
         print("HTTP Error", err)
 
 
-"""complete books_list with books of one page"""
-
-
 def get_links(next_url):
-
+    """complete books_list with books of one page"""
     books_list = []
     next_soup = get_html(next_url)
     section = next_soup.find_all('div', {'class': 'image_container'})
@@ -31,11 +27,8 @@ def get_links(next_url):
     return books_list
 
 
-"""get next page of a category"""
-
-
 def get_next(pages, next_url):
-
+    """get next page of a category"""
     new_page = "page-" + pages + ".html"
     if "index.html" in next_url:
         new_url = next_url.replace("index.html", new_page)
